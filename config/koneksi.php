@@ -1,15 +1,12 @@
 <?php
-// config/koneksi.php
+$host = "localhost";
+$user = "root";
+$pass = "";
+$db   = "daffa_cakes"; // pastikan sesuai dengan nama database kamu
 
-$host     = 'localhost';
-$dbname   = 'daffa_cakes'; // Pastikan nama database sesuai dengan yang kamu import
-$username = 'root';
-$password = ''; // Kosong jika default XAMPP
+$conn = mysqli_connect($host, $user, $pass, $db);
 
-try {
-    $config = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $config->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Koneksi database gagal: " . $e->getMessage());
+if (!$conn) {
+    die("Koneksi gagal: " . mysqli_connect_error());
 }
 ?>
