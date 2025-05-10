@@ -16,7 +16,7 @@ include_once '../layouts/sidebar.php';
 <div class="container-fluid">
     <h1 class="h3 mb-4 text-gray-800">Tambah Produk</h1>
 
-    <form action="proses_tambah_produk.php" method="POST" enctype="multipart/form-data">
+    <form action="proses_tambah_produk.php" method="POST" enctype="multipart/form-data" autocomplete="off">
         <div class="form-group">
             <label>Nama Produk</label>
             <input type="text" name="nama_produk" class="form-control" required>
@@ -61,3 +61,26 @@ document.getElementById('submitBtn')?.addEventListener('click', function () {
 </script>
 
 <?php include_once '../layouts/footer.php'; ?>
+
+<?php if (isset($_SESSION['success'])): ?>
+<script>
+Swal.fire({
+    icon: 'success',
+    title: 'Berhasil!',
+    text: '<?= $_SESSION['success'] ?>',
+    timer: 2000,
+    showConfirmButton: false
+});
+</script>
+<?php unset($_SESSION['success']); endif; ?>
+
+<?php if (isset($_SESSION['error'])): ?>
+<script>
+Swal.fire({
+    icon: 'error',
+    title: 'Gagal!',
+    text: '<?= $_SESSION['error'] ?>'
+});
+</script>
+<?php unset($_SESSION['error']); endif; ?>
+

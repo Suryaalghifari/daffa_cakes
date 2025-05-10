@@ -25,11 +25,16 @@ include_once '../layouts/sidebar.php';
     <?php endif; ?>
 
     <form action="proses_update_profil.php" method="POST" enctype="multipart/form-data">
-        <input type="hidden" name="id" value="<?= $data['user_id'] ?>">
+    <input type="hidden" name="id" value="<?= $data['user_id'] ?>">
 
         <div class="form-group">
             <label>Username</label>
             <input type="text" name="username" class="form-control" value="<?= $data['username'] ?>" required>
+        </div>
+
+        <div class="form-group">
+            <label>Nama Lengkap</label>
+            <input type="text" name="nama_lengkap" class="form-control" value="<?= htmlspecialchars($data['nama_lengkap'] ?? '') ?>" required>
         </div>
 
         <div class="form-group">
@@ -40,6 +45,7 @@ include_once '../layouts/sidebar.php';
 
         <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
     </form>
+
 </div>
 
 <?php include_once '../layouts/footer.php'; ?>

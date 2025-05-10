@@ -23,10 +23,6 @@ $query = mysqli_query($conn, "
 <div class="container-fluid">
     <h1 class="h3 mb-4 text-gray-800">Kelola Produk</h1>
 
-    <?php if (isset($_SESSION['success'])): ?>
-        <div class="alert alert-success"><?= $_SESSION['success']; unset($_SESSION['success']); ?></div>
-    <?php endif; ?>
-
     <a href="tambah_produk.php" class="btn btn-primary mb-3">
         <i class="fas fa-plus"></i> Tambah Produk
     </a>
@@ -60,7 +56,7 @@ $query = mysqli_query($conn, "
                 </td>
                 <td>
                     <a href="edit_produk.php?id=<?= $row['produk_id'] ?>" class="btn btn-warning btn-sm">Edit</a>
-                    <a href="hapus_produk.php?id=<?= $row['produk_id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin hapus produk ini?')">Hapus</a>
+                    <button onclick="hapusProduk(<?= $row['produk_id'] ?>)" class="btn btn-danger btn-sm">Hapus</button>
                 </td>
             </tr>
         <?php endwhile; ?>
@@ -69,3 +65,46 @@ $query = mysqli_query($conn, "
 </div>
 
 <?php include_once '../layouts/footer.php'; ?>
+
+<!-- SweetAlert Notification -->
+<?php if (isset($_SESSION['success'])): ?>
+<script>
+Swal.fire({
+    icon: 'success',
+    title: 'Sukses!',
+    text: '<?= $_SESSION['success'] ?>',
+    timer: 2000,
+    showConfirmButton: false
+});
+</script>
+<?php unset($_SESSION['success']); endif; ?>
+
+<?php if (isset($_SESSION['error'])): ?>
+<script>
+Swal.fire({
+    icon: 'error',
+    title: 'Oops!',
+    text: '<?= $_SESSION['error'] ?>',
+});
+</script>
+<?php unset($_SESSION['error']); endif; ?>
+
+<script>
+// SweetAlert untuk konfirmasi hapus
+function hapusProduk(id) {
+    Swal.fire({
+        title: 'Yakin ingin menghapus?',
+        text: "Data produk akan dihapus permanen!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = 'hapus_produk.php?id=' + id;
+        }
+    });
+}
+</script>

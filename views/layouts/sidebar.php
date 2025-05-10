@@ -1,4 +1,27 @@
-<?php $role = $user['role']; ?>
+<?php
+// Start session jika belum
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+// Ambil koneksi database jika belum ada
+if (!isset($conn)) {
+    require_once __DIR__ . '/../../config/koneksi.php';
+}
+
+// Ambil user dari session
+if (!isset($_SESSION['user'])) {
+    header("Location: /daffa_cakes/views/auth/login.php");
+    exit;
+}
+$user = $_SESSION['user']; // 💡 Pastikan ini array
+$role = $user['role'];
+
+// Ambil nama toko dari DB
+$result = mysqli_query($conn, "SELECT nama_toko FROM toko WHERE id = 1");
+$data_toko = mysqli_fetch_assoc($result);
+$nama_toko = $data_toko['nama_toko'] ?? 'Toko Belum Diatur';
+?>
+
+
 
 <!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
@@ -8,7 +31,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-store"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Daffa Cakes</div>
+        <div class="sidebar-brand-text mx-3">Kueku.id</div>
     </a>
 
     <hr class="sidebar-divider">
@@ -24,6 +47,12 @@
                 <i class="fas fa-users-cog"></i><span>Kelola User</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/daffa_cakes/views/toko/kelola_toko.php">
+                <i class="fas fa-cogs"></i><span>Pengaturan Toko</span>
+            </a>
+        </li>
+
     <?php elseif ($role === 'admin'): ?>
         <li class="nav-item">
             <a class="nav-link" href="/daffa_cakes/views/dashboard/admin/index.php">
@@ -36,6 +65,27 @@
             </a>
         </li>
     <?php endif; ?>
+    
+    <?php if ($role === 'kasir'): ?>
+        <li class="nav-item">
+            <a class="nav-link" href="/daffa_cakes/views/dashboard/kasir/index.php">
+                <i class="fas fa-home"></i><span>Dashboard</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/daffa_cakes/views/transaksi/kelola_pesanan.php">
+                <i class="fas fa-cash-register"></i><span>Transaksi Baru</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/daffa_cakes/views/transaksi/riwayat_penjualan.php">
+                <i class="fas fa-history"></i><span>Riwayat Penjualan</span>
+            </a>
+        </li>
+    <?php endif; ?>
+
 
     <hr class="sidebar-divider d-none d-md-block">
 
@@ -54,18 +104,28 @@
         <!-- Topbar -->
         <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
+            <!-- Tombol toggle untuk desktop -->
+            <button id="sidebarToggle" class="btn btn-link d-none d-md-inline rounded-circle mr-3">
+                <i class="fa fa-bars"></i>
+            </button>
+
+            <!-- Tombol toggle untuk mobile -->
             <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                 <i class="fa fa-bars"></i>
             </button>
+
 
             <!-- User info -->
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown no-arrow">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-                            <?= htmlspecialchars($user['username']) ?> (<?= $user['role'] ?>)
+                       <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                            <strong><?= htmlspecialchars($nama_toko) ?></strong> &nbsp;|&nbsp; 
+                            ✨ <?= htmlspecialchars($user['nama_lengkap']) ?> (<?= ucfirst($user['role']) ?>)
                         </span>
+
+
                         <img class="img-profile rounded-circle"
                              src="/daffa_cakes/assets/img/user/<?= $user['foto'] ?? 'default.png'; ?>" width="30" height="30">
                     </a>

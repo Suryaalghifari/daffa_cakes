@@ -13,12 +13,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = mysqli_fetch_assoc($result);
 
     if ($user && password_verify($password, $user['password'])) {
-       $_SESSION['user'] = [
+        $_SESSION['user'] = [
             'id' => $user['user_id'],
             'username' => $user['username'],
+            'nama_lengkap' => $user['nama_lengkap'], // tambahkan ini
             'role' => $user['role'],
-            'foto' => $user['foto']
+            'foto' => $user['foto'] ?? null // opsional, agar gambar profil langsung siap
         ];
+        
 
         
         switch ($user['role']) {
@@ -51,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Login - Daffa Cakes</title>
+    <link rel="icon" type="image/png" href="/daffa_cakes/assets/img/logo/daffa_logo.png">
     <link href="/daffa_cakes/sb-admin/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="/daffa_cakes/sb-admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
 </head>
