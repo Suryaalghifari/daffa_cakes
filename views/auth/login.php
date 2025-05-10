@@ -16,13 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['user'] = [
             'id' => $user['user_id'],
             'username' => $user['username'],
-            'nama_lengkap' => $user['nama_lengkap'], // tambahkan ini
+            'nama_lengkap' => $user['nama_lengkap'],
             'role' => $user['role'],
-            'foto' => $user['foto'] ?? null // opsional, agar gambar profil langsung siap
+            'foto' => $user['foto'] ?? null
         ];
-        
-
-        
+    
+        $_SESSION['success'] = "Selamat datang, {$user['nama_lengkap']} (" . ucfirst($user['role']) . ")";
+    
         switch ($user['role']) {
             case 'owner':
                 header("Location: /daffa_cakes/views/dashboard/owner/index.php");
@@ -39,11 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 break;
         }
         exit;
-    } else {
-        $_SESSION['error'] = "Username atau password salah.";
-        header("Location: login.php");
-        exit;
     }
+    
 }
 ?>
 
@@ -94,5 +91,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script src="/daffa_cakes/sb-admin/vendor/jquery/jquery.min.js"></script>
 <script src="/daffa_cakes/sb-admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="/daffa_cakes/sb-admin/js/sb-admin-2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<?php if (isset($_SESSION['logout_success'])): ?>
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Logout Berhasil!',
+        text: '<?= $_SESSION['logout_success']; ?>',
+        showConfirmButton: false,
+        timer: 3000
+    });
+</script>
+<?php unset($_SESSION['logout_success']); endif; ?>
+
 </body>
 </html>

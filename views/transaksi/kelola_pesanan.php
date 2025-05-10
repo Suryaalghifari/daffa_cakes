@@ -89,8 +89,9 @@ $produk = mysqli_query($conn, "SELECT * FROM produk ORDER BY nama_produk ASC");
 
                         <div class="form-group">
                             <label>Jumlah Dibayar</label>
-                            <input type="text" name="jumlah_dibayar" id="jumlah_dibayar" class="form-control" required>
+                            <input type="text" name="jumlah_dibayar" id="jumlah_dibayar" class="form-control" required autocomplete="off">
                         </div>
+
 
                         <div class="form-group">
                             <label>Kembalian</label>
