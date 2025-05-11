@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 10 Bulan Mei 2025 pada 15.15
+-- Waktu pembuatan: 11 Bulan Mei 2025 pada 04.14
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.0.30
 
@@ -88,7 +88,17 @@ CREATE TABLE `pembayaran` (
 INSERT INTO `pembayaran` (`pembayaran_id`, `transaksi_id`, `metode`, `jumlah_dibayar`, `kembalian`, `bukti`, `alamat`) VALUES
 (16, 34, 'Transfer', 12000, 7000, NULL, NULL),
 (23, 47, 'Transfer', 6500, 0, 'bukti_681f3ace672e1.png', 'Jalan Dayung No 33'),
-(26, 50, 'QRIS', 3000, 0, 'bukti_681f4b2b89edf.png', 'Jalan Dayung No 33');
+(26, 50, 'QRIS', 3000, 0, 'bukti_681f4b2b89edf.png', 'Jalan Dayung No 33'),
+(27, 51, 'Tunai', 3000, 500, NULL, NULL),
+(28, 52, 'Tunai', 50000, 35000, NULL, NULL),
+(29, 53, '', 3500, 0, NULL, 'Jalan Dayung No 33'),
+(30, 54, 'Transfer', 12000, 10000, NULL, NULL),
+(31, 55, 'Tunai', 30000, 10000, NULL, NULL),
+(32, 56, 'Tunai', 3500, 500, NULL, NULL),
+(33, 57, 'Tunai', 12000, 7000, NULL, NULL),
+(35, 59, 'Transfer', 6500, 0, 'bukti_681fe5d0f29e2.png', 'Jalan Dayung No 33'),
+(36, 60, 'Transfer', 3000, 0, 'bukti_681feb2c77e41.png', 'Jalan Dayung No 33'),
+(37, 61, 'Transfer', 11000, 0, 'bukti_681fec74c65cb.png', 'Jalan Dayung No 33');
 
 -- --------------------------------------------------------
 
@@ -111,11 +121,11 @@ CREATE TABLE `produk` (
 --
 
 INSERT INTO `produk` (`produk_id`, `nama_produk`, `harga`, `stok`, `kategori_id`, `gambar`, `created_at`) VALUES
-(4, 'Kue Lemper', 3500, 2, 1, '681cec2aca2ae.png', '2025-05-09 00:38:50'),
-(5, 'Kue Sus', 3000, 7, 1, '681d90ae39072.png', '2025-05-09 12:20:46'),
-(6, 'Kue Balok Lumer', 2500, 13, 1, '681d92bb0a4c5.JPG', '2025-05-09 12:29:31'),
-(7, 'Paket 1', 15000, 1, 1, '681dc4676fb6d.png', '2025-05-09 16:01:27'),
-(8, 'Selendang Mayang', 2000, 12, 1, '681dc4e7a132b.png', '2025-05-09 16:03:35');
+(4, 'Kue Lemper', 3500, 0, 1, '681cec2aca2ae.png', '2025-05-09 00:38:50'),
+(5, 'Kue Sus', 3000, 2, 1, '681d90ae39072.png', '2025-05-09 12:20:46'),
+(6, 'Kue Balok Lumer', 2500, 0, 1, '681d92bb0a4c5.JPG', '2025-05-09 12:29:31'),
+(7, 'Paket 1', 15000, 0, 1, '681dc4676fb6d.png', '2025-05-09 16:01:27'),
+(8, 'Selendang Mayang', 2000, 11, 1, '681dc4e7a132b.png', '2025-05-09 16:03:35');
 
 -- --------------------------------------------------------
 
@@ -158,7 +168,17 @@ CREATE TABLE `transaksi` (
 INSERT INTO `transaksi` (`transaksi_id`, `pelanggan_id`, `kasir_id`, `waktu`, `total_harga`, `keterangan`, `status`) VALUES
 (34, NULL, 3, '2025-05-10 09:16:25', 5000, NULL, 'valid'),
 (47, 1, 3, '2025-05-10 13:38:54', 6500, NULL, 'valid'),
-(50, 1, 3, '2025-05-10 14:48:43', 3000, NULL, 'valid');
+(50, 1, 3, '2025-05-10 14:48:43', 3000, NULL, 'valid'),
+(51, NULL, 3, '2025-05-10 17:02:21', 2500, NULL, 'valid'),
+(52, NULL, 3, '2025-05-10 17:07:50', 15000, NULL, 'valid'),
+(53, 1, 3, '2025-05-10 17:08:50', 3500, NULL, 'valid'),
+(54, NULL, 3, '2025-05-10 17:32:25', 2000, NULL, 'valid'),
+(55, NULL, 3, '2025-05-10 17:59:49', 20000, NULL, 'valid'),
+(56, NULL, 3, '2025-05-10 19:34:43', 3000, NULL, 'pending'),
+(57, NULL, 3, '2025-05-10 19:44:12', 5000, NULL, 'pending'),
+(59, 1, NULL, '2025-05-11 01:48:32', 6500, NULL, 'pending'),
+(60, 1, NULL, '2025-05-11 02:11:24', 3000, NULL, 'pending'),
+(61, 1, NULL, '2025-05-11 02:16:52', 11000, NULL, 'pending');
 
 -- --------------------------------------------------------
 
@@ -182,7 +202,19 @@ INSERT INTO `transaksi_detail` (`detail_id`, `transaksi_id`, `produk_id`, `jumla
 (34, 34, 6, 2, 2500),
 (57, 47, 4, 1, 3500),
 (58, 47, 5, 1, 3000),
-(61, 50, 5, 1, 3000);
+(61, 50, 5, 1, 3000),
+(62, 51, 6, 1, 2500),
+(63, 52, 7, 1, 15000),
+(64, 53, 4, 1, 3500),
+(65, 54, 8, 1, 2000),
+(66, 55, 6, 8, 2500),
+(67, 56, 5, 1, 3000),
+(68, 57, 6, 2, 2500),
+(71, 59, 5, 1, 3000),
+(72, 59, 4, 1, 3500),
+(73, 60, 5, 1, 3000),
+(74, 61, 6, 2, 2500),
+(75, 61, 5, 2, 3000);
 
 -- --------------------------------------------------------
 
@@ -207,7 +239,8 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`user_id`, `username`, `password`, `role`, `created_at`, `nama_lengkap`, `foto`) VALUES
 (1, 'owner', '$2y$10$73uGfC03kiChbkPLeNwJ/OhwGAopcmkDDv/GXD5X1Rsda5rkvmkAa', 'owner', '2025-05-08 19:24:04', 'Tante Witi', '681cd3dce27ed.png'),
 (2, 'Genjor', '$2y$10$4FuKxQnU2ueN9/DysvT3t.8KKnux9F/SmsRfbo7KNc2IC5L1UV85u', 'admin', '2025-05-08 20:34:45', 'Raihan Salman', '681ce3fa2dc1e.png'),
-(3, 'siwarto', '$2y$10$JBf0u7zZZyktQZE3TL8CKuLjI53LLAfx3ZXcLXS5f6f630/Vp0q2G', 'kasir', '2025-05-09 19:20:24', 'Rafqi Salman', '681df443cbd3f.png');
+(3, 'siwarto', '$2y$10$JBf0u7zZZyktQZE3TL8CKuLjI53LLAfx3ZXcLXS5f6f630/Vp0q2G', 'kasir', '2025-05-09 19:20:24', 'Rafqi Salman', '681df443cbd3f.png'),
+(4, 'UyaSky', '$2y$10$f9FFo5q0srRPVD9J8r9tnuPF/qiIIX3RGEh8WD2xO9flergjmXNIG', 'kasir', '2025-05-11 00:11:07', NULL, 'default.png');
 
 --
 -- Indexes for dumped tables
@@ -288,7 +321,7 @@ ALTER TABLE `pelanggan`
 -- AUTO_INCREMENT untuk tabel `pembayaran`
 --
 ALTER TABLE `pembayaran`
-  MODIFY `pembayaran_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `pembayaran_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT untuk tabel `produk`
@@ -306,19 +339,19 @@ ALTER TABLE `toko`
 -- AUTO_INCREMENT untuk tabel `transaksi`
 --
 ALTER TABLE `transaksi`
-  MODIFY `transaksi_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `transaksi_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT untuk tabel `transaksi_detail`
 --
 ALTER TABLE `transaksi_detail`
-  MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
 -- AUTO_INCREMENT untuk tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
