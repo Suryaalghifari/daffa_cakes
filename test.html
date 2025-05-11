@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout Uji Qty</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="p-4">
+
+<div class="container">
+  <h3>🧪 Uji Halaman Checkout</h3>
+  <div class="row">
+    <!-- Produk -->
+    <div class="col-md-8">
+      <div class="card p-3 mb-4">
+        <h5>Produk</h5>
+        <div class="row" id="produk-list">
+          <!-- produk akan dimuat via JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Keranjang -->
+    <div class="col-md-4">
+      <form id="formCheckout">
+        <div class="card p-3 mb-3">
+          <h5>Keranjang</h5>
+          <table class="table table-sm" id="tabel-keranjang">
+            <thead><tr><th>Produk</th><th>Qty</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+          <div><strong>Total: <span id="total">Rp 0</span></strong></div>
+        </div>
+        <button type="submit" class="btn btn-success btn-block">Checkout</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+// Simulasi data produk
+const dataProduk = [
+  { produk_id: 1, nama_produk: "Bolu Coklat", harga: 12000, stok: 5 },
+  { produk_id: 2, nama_produk: "Lapis Legit", harga: 15000, stok: 3 },
+  { produk_id: 3, nama_produk: "Kue Sus", harga: 5000, stok: 0 }
+];
+
+let keranjang = [];
+let total_harga = 0;
+
+// Tampilkan produk
+function renderProduk() {
+  const el = document.getElementById('produk-list');
+  el.innerHTML = '';
+  dataProduk.forEach(p => {
+    el.innerHTML += `
+      <div class="col-md-4 mb-3">
+        <div class="card text-center" onclick='tambahKeKeranjang(${JSON.stringify(p)})'>
+          <div class="card-body">
+            <h6>${p.nama_produk}</h6>
+            <small>Rp ${p.harga.toLocaleString()}</small>
+          </div>
+        </div>
+      </div>`;
+  });
+}
+
+function tambahKeKeranjang(p) {
+  const idx = keranjang.findIndex(k => k.produk_id === p.produk_id);
+  if (p.stok === 0) {
+    Swal.fire("Stok Habis", "Produk tidak tersedia.", "warning");
+    return;
+  }
+  if (idx !== -1) keranjang[idx].jumlah++;
+  else keranjang.push({ ...p, jumlah: 1 });
+  renderKeranjang();
+}
+
+function renderKeranjang() {
+  const tbody = document.querySelector("#tabel-keranjang tbody");
+  let total = 0;
+  tbody.innerHTML = '';
+  keranjang.forEach(p => {
+    const sub = p.harga * p.jumlah;
+    total += sub;
+    tbody.innerHTML += `
+      <tr data-id="${p.produk_id}">
+        <td>${p.nama_produk}</td>
+        <td><input type="number" class="form-control form-control-sm input-qty" value="${p.jumlah}" min="0" max="${p.stok}"></td>
+        <td><button type="button" class="btn btn-sm btn-danger btn-hapus">x</button></td>
+      </tr>`;
+  });
+  total_harga = total;
+  document.getElementById('total').innerText = "Rp " + total.toLocaleString();
+}
+
+// Event untuk ubah Qty manual
+document.addEventListener('DOMContentLoaded', () => {
+  renderProduk();
+
+  document.querySelector('#tabel-keranjang tbody').addEventListener('change', function (e) {
+    if (e.target.classList.contains('input-qty')) {
+      const tr = e.target.closest('tr');
+      const id = parseInt(tr.getAttribute('data-id'));
+      const qty = parseInt(e.target.value);
+      const index = keranjang.findIndex(p => p.produk_id === id);
+
+      if (qty <= 0) {
+        keranjang = keranjang.filter(p => p.produk_id !== id);
+      } else if (index !== -1) {
+        keranjang[index].jumlah = qty;
+      }
+      renderKeranjang();
+    }
+  });
+
+  // Event hapus
+  document.querySelector('#tabel-keranjang tbody').addEventListener('click', function (e) {
+    if (e.target.classList.contains('btn-hapus')) {
+      const id = parseInt(e.target.closest('tr').getAttribute('data-id'));
+      Swal.fire({
+        title: "Hapus Produk?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Ya, Hapus"
+      }).then(result => {
+        if (result.isConfirmed) {
+          keranjang = keranjang.filter(p => p.produk_id !== id);
+          renderKeranjang();
+        }
+      });
+    }
+  });
+
+  // Simulasi submit
+  document.getElementById("formCheckout").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (keranjang.length === 0) {
+      Swal.fire("Oops", "Keranjang masih kosong.", "error");
+      return;
+    }
+    console.log("KERANJANG TERKIRIM:", keranjang);
+    Swal.fire("Sukses", "Data berhasil dikirim. Lihat console.", "success");
+  });
+});
+</script>
+
+</body>
+</html>

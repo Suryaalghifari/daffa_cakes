@@ -16,17 +16,6 @@ $produk = mysqli_query($conn, "SELECT * FROM produk ORDER BY nama_produk ASC");
 include '../halamanweb/templates/header.php';
 ?>
 
-<style>
-html, body {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-main {
-  flex: 1;
-}
-</style>
-
 <main class="main">
   <section class="section py-5">
     <div class="container">
@@ -35,18 +24,8 @@ main {
         <div class="col-md-8 mb-4">
           <div class="bg-white p-4 shadow rounded">
             <h4 class="mb-4">Pilih Produk</h4>
-            <div class="row">
-              <?php while ($p = mysqli_fetch_assoc($produk)) : ?>
-                <div class="col-md-4 mb-3">
-                  <div class="card produk-card" onclick='tambahKeKeranjang(<?= json_encode($p) ?>)'>
-                    <img src="<?= BASE_URL ?>assets/img/produk/<?= $p['gambar'] ?>" class="card-img-top" style="height: 140px; object-fit: cover;">
-                    <div class="card-body text-center">
-                      <h6><?= $p['nama_produk'] ?></h6>
-                      <p class="text-muted">Rp <?= number_format($p['harga']) ?></p>
-                    </div>
-                  </div>
-                </div>
-              <?php endwhile; ?>
+            <div class="row" id="produk-list">
+              <!-- Produk akan dimuat lewat JavaScript -->
             </div>
           </div>
         </div>
@@ -71,7 +50,6 @@ main {
                 <label>Metode Bayar</label>
                 <select name="metode" id="metodeBayar" class="form-control" required>
                   <option value="">-- Pilih --</option>
-                  <option value="COD">COD</option>
                   <option value="Transfer">Transfer</option>
                   <option value="QRIS">QRIS</option>
                 </select>
@@ -104,36 +82,50 @@ main {
 
 <?php include '../halamanweb/templates/footer.php'; ?>
 
+<!-- Inject produk dari PHP -->
 <script>
+let dataProduk = <?php
+$daftar = [];
+while ($p = mysqli_fetch_assoc($produk)) {
+    $daftar[] = [
+        'produk_id' => (int)$p['produk_id'],
+        'nama_produk' => $p['nama_produk'],
+        'harga' => (int)$p['harga'],
+        'stok' => (int)$p['stok'],
+        'gambar' => $p['gambar'] ?? 'default.png'
+    ];
+}
+echo json_encode($daftar);
+?>;
+
 let keranjang = [];
 let total_harga = 0;
 
-function tambahKeKeranjang(p) {
-  const idx = keranjang.findIndex(k => k.produk_id === p.produk_id);
-  if (idx !== -1) keranjang[idx].jumlah++;
-  else keranjang.push({ ...p, jumlah: 1 });
-  renderKeranjang();
-}
-
-function konfirmasiHapus(id) {
-  Swal.fire({
-    title: 'Hapus Produk?',
-    text: 'Apakah kamu yakin ingin menghapus produk ini dari keranjang?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#6c757d',
-    confirmButtonText: 'Ya, hapus',
-    cancelButtonText: 'Batal'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      hapusDariKeranjang(id);
-    }
+function renderProduk() {
+  const el = document.getElementById('produk-list');
+  el.innerHTML = '';
+  dataProduk.forEach(p => {
+    el.innerHTML += `
+      <div class="col-md-4 mb-3">
+        <div class="card produk-card" onclick='tambahKeKeranjang(${JSON.stringify(p)})' style="cursor:pointer;">
+          <img src="/daffa_cakes/assets/img/produk/${p.gambar}" class="card-img-top" style="height: 140px; object-fit: cover;">
+          <div class="card-body text-center">
+            <h6 class="mb-1">${p.nama_produk}</h6>
+            <p class="text-muted">Rp ${p.harga.toLocaleString()}</p>
+          </div>
+        </div>
+      </div>`;
   });
 }
 
-function hapusDariKeranjang(id) {
-  keranjang = keranjang.filter(p => p.produk_id !== id);
+function tambahKeKeranjang(p) {
+  const idx = keranjang.findIndex(k => k.produk_id === p.produk_id);
+  if (p.stok === 0) {
+    Swal.fire("Stok Habis", "Produk tidak tersedia.", "warning");
+    return;
+  }
+  if (idx !== -1) keranjang[idx].jumlah++;
+  else keranjang.push({ ...p, jumlah: 1 });
   renderKeranjang();
 }
 
@@ -145,10 +137,10 @@ function renderKeranjang() {
     const sub = p.harga * p.jumlah;
     total += sub;
     tbody.innerHTML += `
-      <tr>
+      <tr data-id="${p.produk_id}">
         <td>${p.nama_produk}</td>
-        <td>${p.jumlah}</td>
-        <td><button type="button" class="btn btn-sm btn-danger" onclick="konfirmasiHapus(${p.produk_id})">x</button></td>
+        <td><input type="number" class="form-control form-control-sm input-qty" value="${p.jumlah}" min="0" max="${p.stok}"></td>
+        <td><button type="button" class="btn btn-sm btn-danger btn-hapus">x</button></td>
       </tr>`;
   });
   total_harga = total;
@@ -157,45 +149,82 @@ function renderKeranjang() {
   document.getElementById('inputTotal').value = total;
 }
 
-document.getElementById('metodeBayar').addEventListener('change', function () {
-  const div = document.getElementById('buktiDiv');
-  const fileInput = document.getElementById('inputBukti');
-  const show = this.value === 'Transfer' || this.value === 'QRIS';
-  div.style.display = show ? 'block' : 'none';
-  if (!show) fileInput.value = '';
-});
+document.addEventListener('DOMContentLoaded', () => {
+  renderProduk();
 
-document.getElementById("formCheckout").addEventListener("submit", function(e) {
-  e.preventDefault();
-  if (keranjang.length === 0) {
-    return Swal.fire("Gagal", "Keranjang masih kosong!", "error");
-  }
-
-  const metode = document.getElementById("metodeBayar").value;
-  const bukti = document.getElementById("inputBukti");
-
-  if ((metode === "Transfer" || metode === "QRIS") && bukti.files.length === 0) {
-    return Swal.fire("Gagal", "Mohon unggah bukti pembayaran!", "error");
-  }
-
-  const formData = new FormData(this);
-  formData.set("keranjang", JSON.stringify(keranjang));
-  formData.set("total_harga", total_harga);
-
-  fetch("proses_checkout.php", {
-    method: "POST",
-    body: formData
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.status === "success") {
-      Swal.fire("Berhasil", data.message, "success").then(() => {
-        window.location.href = "../halamanweb/index.php";
-      });
-    } else {
-      Swal.fire("Gagal", data.message, "error");
+  document.querySelector('#tabel-keranjang tbody').addEventListener('change', function (e) {
+    if (e.target.classList.contains('input-qty')) {
+      const tr = e.target.closest('tr');
+      const id = parseInt(tr.getAttribute('data-id'));
+      const qty = parseInt(e.target.value);
+      const index = keranjang.findIndex(p => p.produk_id === id);
+      if (qty <= 0) {
+        keranjang = keranjang.filter(p => p.produk_id !== id);
+      } else if (index !== -1) {
+        keranjang[index].jumlah = qty;
+      }
+      renderKeranjang();
     }
-  })
-  .catch(() => Swal.fire("Error", "Terjadi kesalahan server.", "error"));
+  });
+
+  document.querySelector('#tabel-keranjang tbody').addEventListener('click', function (e) {
+    if (e.target.classList.contains('btn-hapus')) {
+      const id = parseInt(e.target.closest('tr').getAttribute('data-id'));
+      Swal.fire({
+        title: "Hapus Produk?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Ya, Hapus"
+      }).then(result => {
+        if (result.isConfirmed) {
+          keranjang = keranjang.filter(p => p.produk_id !== id);
+          renderKeranjang();
+        }
+      });
+    }
+  });
+
+  document.getElementById('metodeBayar').addEventListener('change', function () {
+    const div = document.getElementById('buktiDiv');
+    const fileInput = document.getElementById('inputBukti');
+    const show = this.value === 'Transfer' || this.value === 'QRIS';
+    div.style.display = show ? 'block' : 'none';
+    if (!show) fileInput.value = '';
+  });
+
+  document.getElementById("formCheckout").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (keranjang.length === 0) {
+      Swal.fire("Oops", "Keranjang masih kosong.", "error");
+      return;
+    }
+
+    const metode = document.getElementById("metodeBayar").value;
+    const bukti = document.getElementById("inputBukti");
+
+    if ((metode === "Transfer" || metode === "QRIS") && bukti.files.length === 0) {
+      return Swal.fire("Gagal", "Mohon unggah bukti pembayaran!", "error");
+    }
+
+    const formData = new FormData(this);
+    formData.set("keranjang", JSON.stringify(keranjang));
+    formData.set("total_harga", total_harga);
+
+    fetch("proses_checkout.php", {
+      method: "POST",
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "success") {
+        Swal.fire("Berhasil", data.message, "success").then(() => {
+          window.location.href = "../halamanweb/index.php";
+        });
+      } else {
+        Swal.fire("Gagal", data.message, "error");
+      }
+    })
+    .catch(() => Swal.fire("Error", "Terjadi kesalahan server.", "error"));
+  });
 });
 </script>

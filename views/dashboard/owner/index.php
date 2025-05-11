@@ -21,6 +21,8 @@ $pendapatan_bulan_ini = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(total
 $total_produk = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM produk WHERE stok > 0"))['total'];
 $total_user = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM user WHERE role IN ('admin','kasir')"))['total'];
 
+$daftar_pelanggan = mysqli_query($conn, "SELECT pelanggan_id, nama_lengkap, email, created_at, username FROM pelanggan ORDER BY created_at DESC LIMIT 5");
+
 // Transaksi terakhir
 $transaksi_terakhir = mysqli_query($conn, "SELECT * FROM transaksi ORDER BY waktu DESC LIMIT 5");
 
@@ -77,13 +79,43 @@ while ($row = mysqli_fetch_assoc($penjualan_bulanan)) {
         </div>
     </div>
 
+    <!-- Daftar Pelanggan -->
+    <div class="card shadow mb-4">
+        <div class="card-header">
+            <h6 class="m-0 font-weight-bold text-secondary">Pelanggan Terdaftar</h6>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-bordered m-0">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Nama Pelanggan</th>
+                        <th>Email</th>
+                        <th>Username</th>
+                        <th>Ditambahkan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($pelanggan = mysqli_fetch_assoc($daftar_pelanggan)) : ?>
+                        <tr>
+                            <td><?= htmlspecialchars($pelanggan['nama_lengkap']) ?></td>
+                            <td><?= htmlspecialchars($pelanggan['email']) ?></td>
+                            <td><?= htmlspecialchars($pelanggan['username']) ?></td>
+                            <td><?= date('d M Y', strtotime($pelanggan['created_at'])) ?></td>
+                        </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <!-- Grafik Penjualan Bulanan -->
     <div class="card shadow mb-4">
         <div class="card-header"><h6 class="m-0 font-weight-bold text-info">Grafik Penjualan (12 Bulan)</h6></div>
         <div class="card-body">
-            <canvas id="grafikPenjualan"
-                data-labels='<?= json_encode($bulan_array) ?>'
-                data-data='<?= json_encode($total_array) ?>'></canvas>
+        <canvas id="grafikPenjualan" 
+            data-labels='<?= json_encode($bulan_array) ?>' 
+            data-data='<?= json_encode($total_array) ?>'></canvas>
+
         </div>
     </div>
 
@@ -109,39 +141,7 @@ while ($row = mysqli_fetch_assoc($penjualan_bulanan)) {
 
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const ctx = document.getElementById('grafikPenjualan').getContext('2d');
-    const labels = JSON.parse(document.getElementById('grafikPenjualan').dataset.labels);
-    const data = JSON.parse(document.getElementById('grafikPenjualan').dataset.data);
-
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Pendapatan (Rp)',
-                data: data,
-                borderColor: 'rgba(78, 115, 223, 1)',
-                backgroundColor: 'rgba(78, 115, 223, 0.2)',
-                tension: 0.3,
-                fill: true
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: ctx => `Rp ${ctx.raw.toLocaleString('id-ID')}`
-                    }
-                }
-            }
-        }
-    });
-});
-</script>
+<script src="/daffa_cakes/sb-admin/js/demo/chart-owner.js"></script>
 
 <!-- SweetAlert Login -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

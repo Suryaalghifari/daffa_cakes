@@ -5,7 +5,7 @@ require_once '../../config/base_url.php';
 
 header('Content-Type: application/json');
 
-// Cek login pelanggan
+// Cek login
 if (!isset($_SESSION['pelanggan_id'])) {
     echo json_encode(['status' => 'error', 'message' => 'Harap login terlebih dahulu.']);
     exit;
@@ -18,13 +18,13 @@ $total = (int)($_POST['total_harga'] ?? 0);
 $pelanggan_id = $_SESSION['pelanggan_id'];
 $status = 'pending';
 
-// Validasi data
+// Validasi awal
 if (empty($keranjang) || !$metode || !$alamat || $total <= 0) {
     echo json_encode(['status' => 'error', 'message' => 'Data tidak lengkap.']);
     exit;
 }
 
-// Proses upload bukti pembayaran jika diperlukan
+// Upload bukti bayar
 $bukti_filename = null;
 if (($metode === 'Transfer' || $metode === 'QRIS') && isset($_FILES['bukti'])) {
     $dir = __DIR__ . '/../../assets/img/bukti/';
@@ -54,18 +54,35 @@ try {
     mysqli_stmt_execute($stmt);
     $trx_id = mysqli_insert_id($conn);
 
-    // Simpan detail transaksi
+    // Simpan detail & update stok
     $stmtDetail = mysqli_prepare($conn, "INSERT INTO transaksi_detail (transaksi_id, produk_id, jumlah, harga_saat_ini) VALUES (?, ?, ?, ?)");
+    $stmtUpdateStok = mysqli_prepare($conn, "UPDATE produk SET stok = stok - ? WHERE produk_id = ? AND stok >= ?");
+
     foreach ($keranjang as $item) {
-        mysqli_stmt_bind_param($stmtDetail, "iiii", $trx_id, $item['produk_id'], $item['jumlah'], $item['harga']);
+        $produk_id = (int)$item['produk_id'];
+        $jumlah = (int)$item['jumlah'];
+        $harga = (int)$item['harga'];
+
+        // Validasi stok di backend
+        $cek = mysqli_fetch_assoc(mysqli_query($conn, "SELECT stok FROM produk WHERE produk_id = $produk_id"));
+        if (!$cek || $cek['stok'] < $jumlah) {
+            throw new Exception("Stok tidak mencukupi untuk produk ID: $produk_id");
+        }
+
+        // Simpan detail
+        mysqli_stmt_bind_param($stmtDetail, "iiii", $trx_id, $produk_id, $jumlah, $harga);
         mysqli_stmt_execute($stmtDetail);
 
         // Kurangi stok
-        mysqli_query($conn, "UPDATE produk SET stok = stok - {$item['jumlah']} WHERE produk_id = {$item['produk_id']}");
+        mysqli_stmt_bind_param($stmtUpdateStok, "iii", $jumlah, $produk_id, $jumlah);
+        mysqli_stmt_execute($stmtUpdateStok);
     }
 
     // Simpan pembayaran
-    $stmtBayar = mysqli_prepare($conn, "INSERT INTO pembayaran (transaksi_id, metode, jumlah_dibayar, kembalian, bukti, alamat) VALUES (?, ?, ?, 0, ?, ?)");
+    $stmtBayar = mysqli_prepare($conn, "
+        INSERT INTO pembayaran (transaksi_id, metode, jumlah_dibayar, kembalian, bukti, alamat)
+        VALUES (?, ?, ?, 0, ?, ?)
+    ");
     mysqli_stmt_bind_param($stmtBayar, "issss", $trx_id, $metode, $total, $bukti_filename, $alamat);
     mysqli_stmt_execute($stmtBayar);
 

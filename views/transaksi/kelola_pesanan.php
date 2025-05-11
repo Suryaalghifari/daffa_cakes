@@ -68,7 +68,7 @@ $produk = mysqli_query($conn, "SELECT * FROM produk ORDER BY nama_produk ASC");
                             <tbody></tbody>
                         </table>
                         <input type="hidden" name="data_keranjang" id="data_keranjang">
-                        <button type="button" class="btn btn-danger btn-sm btn-block" onclick="konfirmasiKosongkan()">Kosongkan</button>
+                        <button type="button" class="btn btn-danger btn-sm btn-block" onclick="konfirmasiKosongkan()">Batalkan</button>
                     </div>
                 </div>
 
@@ -91,7 +91,6 @@ $produk = mysqli_query($conn, "SELECT * FROM produk ORDER BY nama_produk ASC");
                             <label>Jumlah Dibayar</label>
                             <input type="text" name="jumlah_dibayar" id="jumlah_dibayar" class="form-control" required autocomplete="off">
                         </div>
-
 
                         <div class="form-group">
                             <label>Kembalian</label>
@@ -133,12 +132,15 @@ $produk = mysqli_query($conn, "SELECT * FROM produk ORDER BY nama_produk ASC");
         renderKeranjang();
     }
 
-    function ubahJumlah(id, perubahan) {
+    function ubahJumlahManual(id, jumlahBaru) {
         let index = keranjang.findIndex(p => p.produk_id === id);
         if (index !== -1) {
-            keranjang[index].jumlah += perubahan;
-            if (keranjang[index].jumlah <= 0) {
-                keranjang.splice(index, 1);
+            // Pastikan jumlah yang dimasukkan tidak lebih dari stok
+            jumlahBaru = parseInt(jumlahBaru);
+            if (jumlahBaru > 0 && jumlahBaru <= keranjang[index].stok) {
+                keranjang[index].jumlah = jumlahBaru;
+            } else {
+                Swal.fire("Stok Tidak Cukup", "Jumlah yang dimasukkan melebihi stok produk.", "warning");
             }
             renderKeranjang();
         }
@@ -156,11 +158,11 @@ $produk = mysqli_query($conn, "SELECT * FROM produk ORDER BY nama_produk ASC");
 
     function konfirmasiKosongkan() {
         Swal.fire({
-            title: 'Kosongkan Keranjang?',
+            title: 'Batalkan Keranjang?',
             text: "Semua item akan dihapus dari keranjang!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Ya, kosongkan!',
+            confirmButtonText: 'Ya, Batalkan!',
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
@@ -179,11 +181,7 @@ $produk = mysqli_query($conn, "SELECT * FROM produk ORDER BY nama_produk ASC");
                 <tr>
                     <td>${p.nama_produk}</td>
                     <td>
-                        <div class="d-flex align-items-center">
-                            <button type="button" class="btn btn-sm btn-light" onclick="ubahJumlah(${p.produk_id}, -1)">-</button>
-                            <span class="mx-2">${p.jumlah}</span>
-                            <button type="button" class="btn btn-sm btn-light" onclick="ubahJumlah(${p.produk_id}, 1)">+</button>
-                        </div>
+                        <input type="number" class="form-control form-control-sm" value="${p.jumlah}" min="1" max="${p.stok}" onchange="ubahJumlahManual(${p.produk_id}, this.value)">
                     </td>
                     <td><button type="button" class="btn btn-sm btn-danger" onclick="hapusDariKeranjang(${p.produk_id})">x</button></td>
                 </tr>`;
