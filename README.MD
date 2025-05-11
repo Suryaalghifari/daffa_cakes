@@ -70,3 +70,22 @@ Proyek ini menggunakan lisensi MIT. Silakan lihat file [LICENSE](LICENSE) untuk 
 
 ---
 
+## 🖼️ Tampilan Aplikasi
+
+### 🔐 Register Pelanggan
+![Login Owner/Admin/Kasir](screenshots/register_pelanggan.png)
+
+### 🧑‍🍳 Login Pelanggan
+![Login Pelanggan](screenshots/loginpelanggan.png)
+
+### 🏠 Halaman Utama Pelanggan
+![Landing Page](screenshots/halaman_utamapelanggan.png)
+
+### 📊 Dashboard Owner
+![Dashboard Owner](screenshots/dashboard_owner.png)
+
+### 📊 Dashboard Kasir
+![Dashboard Owner](screenshots/dashboard_kasir.png)
+
+### 📊 Dashboard Admin
+![Dashboard Owner](screenshots/dashboard_admin.png)
