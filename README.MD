@@ -73,7 +73,7 @@ Proyek ini menggunakan lisensi MIT. Silakan lihat file [LICENSE](LICENSE) untuk 
 ## 🖼️ Tampilan Aplikasi
 
 ### 🔐 Register Pelanggan
-![Login Owner/Admin/Kasir](screenshots/register_pelanggan.png)
+![Login Owner/Admin/Kasir](screenshots/regiter_pelanggan.png)
 
 ### 🧑‍🍳 Login Pelanggan
 ![Login Pelanggan](screenshots/loginpelanggan.png)
