@@ -41,21 +41,6 @@
 - **SB Admin 2 Template**
 - **SweetAlert 2**
 
-## 📂 Struktur Folder
-
-/daffa_cakes/
-├── config/ # File koneksi database & base URL
-├── views/
-│ ├── auth/ # Login & register semua user
-│ ├── owner/ # Dashboard & fitur Owner
-│ ├── admin/ # Manajemen produk & kategori
-│ ├── kasir/ # Transaksi, validasi, laporan kasir
-│ ├── pelanggan/ # Checkout, riwayat pesanan, edit profil
-│ ├── halamanweb/ # Landing page publik
-│ └── website/ # Kelola konten website
-├── assets/ # Gambar produk, profile, dll
-└── database/ # (Opsional) Struktur SQL database
-
 
 ## 🔐 Demo Login
 
@@ -67,3 +52,21 @@
 
 🔗 Akses Pelanggan:  
 [http://localhost/daffa_cakes/views/halamanweb/index.php](http://localhost/daffa_cakes/views/halamanweb/index.php)
+
+## 📌 Catatan Instalasi
+
+1. Clone repositori ini ke dalam folder `htdocs/` atau root XAMPP/Laragon:
+2. Buat database `daffa_cakes` dan import file SQL yang disediakan (jika ada).
+3. Jalankan project melalui browser:
+4. Ubah konfigurasi koneksi di `config/koneksi.php` jika perlu.
+
+## 📥 Kontribusi
+
+Ingin berkontribusi? Silakan fork repo ini, lakukan perubahan, dan buat pull request.
+
+## 📄 Lisensi
+
+Proyek ini menggunakan lisensi MIT. Silakan lihat file [LICENSE](LICENSE) untuk detailnya.
+
+---
+
