@@ -18,14 +18,6 @@ $query = mysqli_query($conn, "SELECT * FROM user ORDER BY user_id ASC");
 <!-- Konten Halaman -->
 <div class="container-fluid">
     <h2 class="mb-4">Kelola User</h2>
-    <?php if (isset($_SESSION['success'])): ?>
-    <div class="alert alert-success"><?= $_SESSION['success']; unset($_SESSION['success']); ?></div>
-    <?php endif; ?>
-
-    <?php if (isset($_SESSION['error'])): ?>
-        <div class="alert alert-danger"><?= $_SESSION['error']; unset($_SESSION['error']); ?></div>
-    <?php endif; ?>
-
     <!-- Form Tambah User -->
     <form action="tambah_user.php" method="POST" class="mb-4">
         <div class="form-group">
@@ -67,8 +59,7 @@ $query = mysqli_query($conn, "SELECT * FROM user ORDER BY user_id ASC");
                     <td><?= $row['created_at'] ?></td>
                     <td>
                         <a href="edit_user.php?id=<?= $row['user_id'] ?>" class="btn btn-sm btn-warning">Edit</a>
-                        <a href="hapus_user.php?id=<?= $row['user_id'] ?>" class="btn btn-sm btn-danger"
-                        onclick="return confirm('Yakin ingin menghapus user ini?')">Hapus</a>
+                        <button onclick="hapusUser(<?= $row['user_id'] ?>)" class="btn btn-sm btn-danger">Hapus</button>
                     </td>
                 </tr>
             <?php endwhile; ?>
@@ -78,3 +69,49 @@ $query = mysqli_query($conn, "SELECT * FROM user ORDER BY user_id ASC");
 </div>
 
 <?php include_once '../layouts/footer.php'; ?>
+<!-- SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Konfirmasi Hapus -->
+<script>
+function hapusUser(id) {
+    Swal.fire({
+        title: 'Yakin ingin menghapus user ini?',
+        text: 'Data akan terhapus permanen!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, hapus',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = 'hapus_user.php?id=' + id;
+        }
+    });
+}
+</script>
+
+<!-- SweetAlert: Success -->
+<?php if (isset($_SESSION['success'])): ?>
+<script>
+Swal.fire({
+    icon: 'success',
+    title: 'Berhasil!',
+    text: '<?= $_SESSION['success'] ?>',
+    timer: 2000,
+    showConfirmButton: false
+});
+</script>
+<?php unset($_SESSION['success']); endif; ?>
+
+<!-- SweetAlert: Error -->
+<?php if (isset($_SESSION['error'])): ?>
+<script>
+Swal.fire({
+    icon: 'error',
+    title: 'Gagal!',
+    text: '<?= $_SESSION['error'] ?>',
+});
+</script>
+<?php unset($_SESSION['error']); endif; ?>

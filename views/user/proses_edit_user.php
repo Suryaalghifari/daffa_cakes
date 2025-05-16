@@ -12,7 +12,25 @@ $username = trim($_POST['username']);
 $password = trim($_POST['password']);
 $role     = $_POST['role'];
 
-// Jika password dikosongkan, jangan ubah
+// Validasi kosong
+if (empty($username) || empty($role)) {
+    $_SESSION['error'] = "Username dan Role tidak boleh kosong!";
+    header("Location: edit_user.php?id=$id");
+    exit;
+}
+
+// Cek apakah user benar-benar ada
+$cekUser = mysqli_prepare($conn, "SELECT user_id FROM user WHERE user_id = ?");
+mysqli_stmt_bind_param($cekUser, "i", $id);
+mysqli_stmt_execute($cekUser);
+mysqli_stmt_store_result($cekUser);
+if (mysqli_stmt_num_rows($cekUser) === 0) {
+    $_SESSION['error'] = "User tidak ditemukan!";
+    header("Location: kelola_user.php");
+    exit;
+}
+
+// Update
 if ($password !== '') {
     $hashed = password_hash($password, PASSWORD_DEFAULT);
     $query = mysqli_prepare($conn, "UPDATE user SET username = ?, password = ?, role = ? WHERE user_id = ?");
@@ -22,8 +40,11 @@ if ($password !== '') {
     mysqli_stmt_bind_param($query, "ssi", $username, $role, $id);
 }
 
-mysqli_stmt_execute($query);
+if (mysqli_stmt_execute($query)) {
+    $_SESSION['success'] = "User berhasil diperbarui!";
+} else {
+    $_SESSION['error'] = "Gagal memperbarui user. Silakan coba lagi.";
+}
 
-$_SESSION['success'] = "User berhasil diperbarui!";
 header("Location: kelola_user.php");
 exit;
