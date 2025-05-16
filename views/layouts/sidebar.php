@@ -72,6 +72,12 @@ $nama_toko = $data_toko['nama_toko'] ?? 'Toko Belum Diatur';
                 <i class="fas fa-box-open"></i><span>Kelola Produk</span>
             </a>
         </li>
+        <li class="nav-item">
+                <a class="nav-link" href="/daffa_cakes/views/user/kelola_user.php">
+                    <i class="fas fa-users-cog"></i><span>Kelola User</span>
+                </a>
+        </li>
+        
     <?php endif; ?>
     
     <?php if ($role === 'kasir'): ?>

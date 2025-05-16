@@ -3,7 +3,7 @@ session_start();
 require_once __DIR__ . '/../../config/koneksi.php';
 
 // Cek apakah owner yang akses
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'owner') {
+if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
     header("Location: /daffa_cakes/views/auth/login.php");
     exit;
 }
