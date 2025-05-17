@@ -44,11 +44,6 @@ $nama_toko = $data_toko['nama_toko'] ?? 'Toko Belum Diatur';
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/daffa_cakes/views/user/kelola_user.php">
-                    <i class="fas fa-users-cog"></i><span>Kelola User</span>
-                </a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="/daffa_cakes/views/toko/kelola_toko.php">
                     <i class="fas fa-cogs"></i><span>Pengaturan Toko</span>
                 </a>

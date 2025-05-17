@@ -36,10 +36,11 @@ if (!$data) {
         <div class="form-group">
             <label>Role</label>
             <select name="role" class="form-control" required>
+                <option value="owner" <?= $data['role'] == 'owner' ? 'selected' : '' ?>>Owner</option>
                 <option value="admin" <?= $data['role'] == 'admin' ? 'selected' : '' ?>>Admin</option>
                 <option value="kasir" <?= $data['role'] == 'kasir' ? 'selected' : '' ?>>Kasir</option>
             </select>
-        </div>
+            </div>
         <button type="submit" class="btn btn-success">Simpan Perubahan</button>
         <a href="kelola_user.php" class="btn btn-secondary">Kembali</a>
     </form>

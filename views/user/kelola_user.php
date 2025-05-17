@@ -32,10 +32,12 @@ $query = mysqli_query($conn, "SELECT * FROM user ORDER BY user_id ASC");
             <label>Role</label>
             <select name="role" class="form-control" required>
                 <option value="">-- Pilih Role --</option>
+                <option value="owner">Owner</option>
                 <option value="admin">Admin</option>
                 <option value="kasir">Kasir</option>
             </select>
         </div>
+
         <button class="btn btn-primary" type="submit">Tambah User</button>
     </form>
 
