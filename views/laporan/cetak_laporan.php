@@ -2,8 +2,13 @@
 session_start();
 require_once '../../config/koneksi.php';
 
-$type = $_GET['type'] ?? '';
+$type = isset($_GET['type']) ? strtolower($_GET['type']) : '';
 $date = $_GET['date'] ?? '';
+
+if (!in_array($type, ['harian', 'bulanan'])) {
+    die("Jenis laporan tidak valid.");
+}
+
 
 // Locale ID
 setlocale(LC_TIME, 'id_ID.utf8');

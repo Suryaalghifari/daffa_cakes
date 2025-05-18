@@ -91,7 +91,7 @@ $laporan_bulanan_data = mysqli_fetch_assoc($laporan_bulanan);
         </div>
 
         <div class="text-right">
-            <a href="cetak_laporan.php?type=harian&date=<?= $tanggal_bulan_ini ?>" class="btn btn-sm btn-primary">
+                    <a href="cetak_laporan.php?type=bulanan&date=<?= $tanggal_bulan_ini ?>" class="btn btn-sm btn-primary">
                 <i class="fas fa-print"></i> Cetak Laporan Bulanan
             </a>
         </div>
