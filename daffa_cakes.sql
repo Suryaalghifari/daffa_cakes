@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 11 Bulan Mei 2025 pada 04.14
+-- Waktu pembuatan: 19 Bulan Mei 2025 pada 09.15
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.0.30
 
@@ -54,6 +54,7 @@ CREATE TABLE `pelanggan` (
   `alamat` text DEFAULT NULL,
   `no_hp` varchar(20) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL,
   `username` varchar(50) DEFAULT NULL,
   `foto` varchar(100) DEFAULT 'default.png'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -62,8 +63,8 @@ CREATE TABLE `pelanggan` (
 -- Dumping data untuk tabel `pelanggan`
 --
 
-INSERT INTO `pelanggan` (`pelanggan_id`, `nama_lengkap`, `email`, `password`, `alamat`, `no_hp`, `created_at`, `username`, `foto`) VALUES
-(1, 'UyaSky', 'lily@rifkiidr.id', '$2y$10$76L4m0C1nPABgN0AANEti.qZ4NrmLxiqzv0ieKCDZ1TK9JzYd57rG', 'Jalan Dayung No 33', '085792438608', '2025-05-10 01:23:14', 'Genjor', 'pelanggan_681f33b3a1789.png');
+INSERT INTO `pelanggan` (`pelanggan_id`, `nama_lengkap`, `email`, `password`, `alamat`, `no_hp`, `created_at`, `updated_at`, `username`, `foto`) VALUES
+(1, 'UyaSky', 'lily@rifkiidr.id', '$2y$10$76L4m0C1nPABgN0AANEti.qZ4NrmLxiqzv0ieKCDZ1TK9JzYd57rG', 'Jalan Dayung No 33', '085792438608', '2025-05-10 01:23:14', '2025-05-19 09:14:31', 'Genjor Ganteng', 'pelanggan_681f33b3a1789.png');
 
 -- --------------------------------------------------------
 
@@ -240,7 +241,7 @@ INSERT INTO `user` (`user_id`, `username`, `password`, `role`, `created_at`, `na
 (1, 'owner', '$2y$10$73uGfC03kiChbkPLeNwJ/OhwGAopcmkDDv/GXD5X1Rsda5rkvmkAa', 'owner', '2025-05-08 19:24:04', 'Tante Witi', '681cd3dce27ed.png'),
 (2, 'Genjor', '$2y$10$4FuKxQnU2ueN9/DysvT3t.8KKnux9F/SmsRfbo7KNc2IC5L1UV85u', 'admin', '2025-05-08 20:34:45', 'Raihan Salman', '681ce3fa2dc1e.png'),
 (3, 'siwarto', '$2y$10$JBf0u7zZZyktQZE3TL8CKuLjI53LLAfx3ZXcLXS5f6f630/Vp0q2G', 'kasir', '2025-05-09 19:20:24', 'Rafqi Salman', '681df443cbd3f.png'),
-(4, 'UyaSky', '$2y$10$f9FFo5q0srRPVD9J8r9tnuPF/qiIIX3RGEh8WD2xO9flergjmXNIG', 'kasir', '2025-05-11 00:11:07', NULL, 'default.png');
+(10, 'uyabandung', '$2y$10$agsFhbsKkTG4kfUEOw.l5eoKz7VGPC4P3VQjCnf1whvDTuiGpa4s2', 'owner', '2025-05-17 18:29:12', 'UyaGanteng', '6828733690110.jpg');
 
 --
 -- Indexes for dumped tables
@@ -351,7 +352,7 @@ ALTER TABLE `transaksi_detail`
 -- AUTO_INCREMENT untuk tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)

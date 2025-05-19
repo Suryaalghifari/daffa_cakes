@@ -12,6 +12,10 @@ $id = $_SESSION['pelanggan_id'];
 $data = mysqli_query($conn, "SELECT * FROM pelanggan WHERE pelanggan_id = $id");
 $pelanggan = mysqli_fetch_assoc($data);
 
+// Format tanggal Bahasa Indonesia
+setlocale(LC_TIME, 'id_ID.utf8'); // Linux/macOS
+// Jika Windows, coba 'IND' atau 'id-ID' jika tidak tampil
+
 // Path gambar profil
 $foto = $pelanggan['foto'] ?? '';
 $fotoPath = file_exists(__DIR__ . '/../halamanweb/assets/img/profile/' . $foto)
@@ -26,7 +30,14 @@ include '../halamanweb/templates/header.php';
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-8">
-          <h3 class="mb-4">Edit Profil Saya</h3>
+          <h3 class="mb-2">Edit Profil Saya</h3>
+
+          <?php if (!empty($pelanggan['updated_at'])): ?>
+            <p class="text-muted">Terakhir diperbarui: 
+              <?= strftime('%A, %d %B %Y %H:%M', strtotime($pelanggan['updated_at'])) ?>
+            </p>
+          <?php endif; ?>
+
           <a href="<?= BASE_URL ?>views/halamanweb/index.php" class="btn btn-sm btn-outline-secondary mb-3">
             <i class="bi bi-arrow-left"></i> Kembali ke Beranda
           </a>
@@ -70,6 +81,7 @@ include '../halamanweb/templates/header.php';
 <?php include '../halamanweb/templates/footer.php'; ?>
 
 <?php if (isset($_GET['success'])): ?>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 Swal.fire({
   title: "Berhasil",

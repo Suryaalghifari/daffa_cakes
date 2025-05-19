@@ -13,6 +13,7 @@ $email = mysqli_real_escape_string($conn, $_POST['email']);
 $no_hp = mysqli_real_escape_string($conn, $_POST['no_hp']);
 $username = mysqli_real_escape_string($conn, $_POST['username']);
 $password = $_POST['password'];
+$updated_at = date('Y-m-d H:i:s'); // 🆕 Waktu update
 
 $foto_baru = null;
 if (isset($_FILES['foto']['name']) && $_FILES['foto']['name'] !== '') {
@@ -35,7 +36,8 @@ $sql = "UPDATE pelanggan SET
     nama_lengkap = '$nama',
     email = '$email',
     no_hp = '$no_hp',
-    username = '$username'";
+    username = '$username',
+    updated_at = '$updated_at'";
 
 if (!empty($password)) {
     $password_hash = password_hash($password, PASSWORD_BCRYPT);
