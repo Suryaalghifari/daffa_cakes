@@ -50,12 +50,18 @@ include_once '../layouts/sidebar.php';
     <div class="card mb-4">
         <div class="card-body">
             <p><strong>Waktu:</strong> <?= date('d/m/Y H:i', strtotime($transaksi['waktu'])) ?></p>
+
             <p><strong>Kasir:</strong>
                 <?php if ($transaksi['kasir']) : ?>
                     <?= htmlspecialchars($transaksi['kasir']) ?>
                 <?php else : ?>
-                    <span class="text-primary">Pelanggan (<?= htmlspecialchars($transaksi['pelanggan']) ?>)</span>
+                    <em>Tidak diketahui</em>
                 <?php endif; ?>
+            </p>
+
+            <?php if ($transaksi['pelanggan']) : ?>
+                <p><strong>Pelanggan:</strong> <?= htmlspecialchars($transaksi['pelanggan']) ?></p>
+            <?php endif; ?>
             </p>
             <p><strong>Status:</strong>
                 <?= $transaksi['status'] === 'valid'

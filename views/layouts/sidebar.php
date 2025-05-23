@@ -77,6 +77,11 @@ $nama_toko = $data_toko['nama_toko'] ?? 'Toko Belum Diatur';
                     <i class="fas fa-solid fa-credit-card"></i><span>Metode Pembayaran</span>
                 </a>
         </li>
+        <li class="nav-item">
+                <a class="nav-link" href="/daffa_cakes/views/laporan/kelola_laporan.php">
+                    <i class="fas fa-wrench"></i><span>Kelola Laporan</span>
+                </a>
+            </li>
 
     <?php endif; ?>
     
@@ -100,9 +105,19 @@ $nama_toko = $data_toko['nama_toko'] ?? 'Toko Belum Diatur';
         </li>
     <?php endif; ?>
 
-
+    <?php if ($role === 'chef'): ?>
+        <li class="nav-item">
+            <a class="nav-link" href="/daffa_cakes/views/dashboard/chef/index.php">
+                <i class="fas fa-home"></i><span>Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/daffa_cakes/views/produk/kelola_produk.php">
+                <i class="fas fa-box-open"></i><span>Kelola Produk</span>
+            </a>
+        </li>
+    <?php endif; ?>
     <hr class="sidebar-divider d-none d-md-block">
-
     <li class="nav-item">
         <a class="nav-link" href="/daffa_cakes/logout.php">
             <i class="fas fa-sign-out-alt"></i><span>Logout</span>

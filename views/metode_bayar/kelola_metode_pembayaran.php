@@ -26,12 +26,11 @@ include_once '../layouts/sidebar.php';
 
   <form action="proses_update_pembayaran.php" method="POST" enctype="multipart/form-data" class="row">
     <!-- TRANSFER -->
-    <div class="col-md-6 mb-4">
+<div class="col-md-6 mb-4">
       <div class="card">
         <div class="card-header bg-primary text-white">Transfer Bank</div>
         <div class="card-body">
-          <input type="hidden" name="jenis[]" value="Transfer">
-          <div class="form-group">
+          <input type="hidden" name="jenis[]" value="Transfer"><div class="form-group">
             <label>Nama Bank</label>
             <input type="text" name="nama_bank" class="form-control" value="<?= htmlspecialchars($transfer['nama_bank'] ?? '') ?>">
           </div>

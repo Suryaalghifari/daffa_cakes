@@ -1,0 +1,6 @@
+1. Laporan Keuangan Ada Juga di Admin 
+2. Tambah Role Chef :   
+   Fungsi untuk menambah produk 
+3. Validasi Untuk cek struk : 
+    Apa yakin ingin cek struk ini , Jika ya cetak jika tidak kembali ke menu cetak struk 
+

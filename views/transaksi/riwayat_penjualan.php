@@ -67,9 +67,11 @@ $pending_query = mysqli_query($conn, "
                             </td>
                             <td>Rp <?= number_format($t['total_harga']) ?></td>
                             <td><span class="text-success"><i class="fas fa-check-circle"></i> Valid</span></td>
+                            <!-- ✅ Tabel Transaksi Valid -->
                             <td>
-                                <a href="detail_transaksi.php?id=<?= $t['transaksi_id'] ?>" class="btn btn-sm btn-info">Detail</a>
-                                <button onclick="hapusTransaksi(<?= $t['transaksi_id'] ?>)" class="btn btn-sm btn-danger">Hapus</button>
+                            <a href="detail_transaksi.php?id=<?= $t['transaksi_id'] ?>" class="btn btn-sm btn-info">Detail</a>
+                            <a href="cetak_struk.php?id=<?= $t['transaksi_id'] ?>" target="_blank" class="btn btn-sm btn-secondary">Cetak</a>
+                            <button onclick="hapusTransaksi(<?= $t['transaksi_id'] ?>)" class="btn btn-sm btn-danger">Hapus</button>
                             </td>
                         </tr>
                     <?php endwhile; ?>
@@ -107,7 +109,6 @@ $pending_query = mysqli_query($conn, "
                             <td><span class="text-warning"><i class="fas fa-clock"></i> Pending</span></td>
                             <td>
                                 <a href="detail_transaksi.php?id=<?= $p['transaksi_id'] ?>" class="btn btn-sm btn-info">Detail</a>
-                                <a href="cetak_struk.php?id=<?= $p['transaksi_id'] ?>" target="_blank" class="btn btn-sm btn-secondary">Cetak</a>
                                 <a href="validasi_transaksi.php?id=<?= $p['transaksi_id'] ?>" class="btn btn-sm btn-success">Validasi</a>
                                 <button onclick="hapusTransaksi(<?= $p['transaksi_id'] ?>)" class="btn btn-sm btn-danger">Hapus</button>
                             </td>

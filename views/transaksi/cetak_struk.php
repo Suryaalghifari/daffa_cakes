@@ -2,17 +2,21 @@
 session_start();
 require_once '../../config/koneksi.php';
 
+// Autentikasi kasir
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'kasir') {
     header("Location: /daffa_cakes/views/auth/login.php");
     exit;
 }
 
 if (!isset($_GET['id'])) {
-    die("ID transaksi tidak ditemukan.");
+    $_SESSION['error'] = "ID transaksi tidak ditemukan.";
+    header("Location: riwayat_penjualan.php");
+    exit;
 }
 
 $id = (int) $_GET['id'];
 
+// Ambil data transaksi
 $transaksi = mysqli_query($conn, "
     SELECT t.*, u.nama_lengkap AS kasir
     FROM transaksi t
@@ -20,10 +24,21 @@ $transaksi = mysqli_query($conn, "
     WHERE t.transaksi_id = $id
 ");
 $data = mysqli_fetch_assoc($transaksi);
+
 if (!$data) {
-    die("Transaksi tidak ditemukan.");
+    $_SESSION['error'] = "Transaksi tidak ditemukan.";
+    header("Location: riwayat_penjualan.php");
+    exit;
 }
 
+// ⛔ Hanya transaksi valid yang bisa dicetak
+if ($data['status'] !== 'valid') {
+    $_SESSION['error'] = "Transaksi belum divalidasi, tidak dapat mencetak struk.";
+    header("Location: riwayat_penjualan.php");
+    exit;
+}
+
+// Ambil data detail produk
 $produk = mysqli_query($conn, "
     SELECT td.*, p.nama_produk
     FROM transaksi_detail td
@@ -31,6 +46,7 @@ $produk = mysqli_query($conn, "
     WHERE td.transaksi_id = $id
 ");
 
+// Pembayaran
 $pembayaran = mysqli_query($conn, "SELECT * FROM pembayaran WHERE transaksi_id = $id");
 $bayar = mysqli_fetch_assoc($pembayaran);
 ?>
@@ -79,7 +95,7 @@ while ($p = mysqli_fetch_assoc($produk)) :
 
 <?php if ($bayar): ?>
     <p><strong>Bayar</strong> <span style="float:right">Rp <?= number_format($bayar['jumlah_dibayar']) ?></span></p>
-    <p><strong>Kembali</strong> <span style="float:right">Rp <?= number_format($bayar['jumlah_dibayar'] - $data['total_harga']) ?></span></p>
+    <p><strong>Kembali</strong> <span style="float:right">Rp <?= number_format($bayar['kembalian']) ?></span></p>
 <?php else: ?>
     <p class="text-danger">❗ Data pembayaran belum tersedia</p>
 <?php endif; ?>

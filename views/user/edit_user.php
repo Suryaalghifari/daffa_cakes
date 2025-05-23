@@ -39,6 +39,7 @@ if (!$data) {
                 <option value="owner" <?= $data['role'] == 'owner' ? 'selected' : '' ?>>Owner</option>
                 <option value="admin" <?= $data['role'] == 'admin' ? 'selected' : '' ?>>Admin</option>
                 <option value="kasir" <?= $data['role'] == 'kasir' ? 'selected' : '' ?>>Kasir</option>
+                <option value="chef" <?= $data['role'] == 'chef' ? 'selected' : '' ?>>Chef</option>
             </select>
             </div>
         <button type="submit" class="btn btn-success">Simpan Perubahan</button>
