@@ -46,6 +46,7 @@ if (($metode === 'Transfer' || $metode === 'QRIS') && isset($_FILES['bukti'])) {
 
 mysqli_begin_transaction($conn);
 try {
+    date_default_timezone_set('Asia/Jakarta');
     $waktu = date('Y-m-d H:i:s');
 
     // Simpan transaksi

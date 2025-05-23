@@ -43,6 +43,7 @@ foreach ($keranjang as $item) {
 // Simpan ke database dengan transaksi
 mysqli_begin_transaction($conn);
 try {
+    date_default_timezone_set('Asia/Jakarta');
     $waktu = date('Y-m-d H:i:s');
 
     // Simpan ke tabel transaksi

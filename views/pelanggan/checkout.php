@@ -12,6 +12,10 @@ $pelanggan_id = $_SESSION['pelanggan_id'];
 $data = mysqli_query($conn, "SELECT * FROM pelanggan WHERE pelanggan_id = $pelanggan_id");
 $pelanggan = mysqli_fetch_assoc($data);
 $produk = mysqli_query($conn, "SELECT * FROM produk ORDER BY nama_produk ASC");
+// Ambil metode pembayaran dari database
+$transfer = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM metode_pembayaran WHERE metode = 'Transfer' LIMIT 1"));
+$qris = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM metode_pembayaran WHERE metode = 'QRIS' LIMIT 1"));
+
 
 include '../halamanweb/templates/header.php';
 ?>
@@ -31,6 +35,7 @@ include '../halamanweb/templates/header.php';
         </div>
 
         <!-- Kolom Keranjang -->
+        <!-- Kolom Keranjang -->
         <div class="col-md-4">
           <div class="bg-white p-4 shadow rounded">
             <h4 class="mb-3">Keranjang</h4>
@@ -46,6 +51,7 @@ include '../halamanweb/templates/header.php';
                 <strong>Total: <span id="total">Rp 0</span></strong>
               </div>
 
+              <!-- Metode Bayar -->
               <div class="mb-3">
                 <label>Metode Bayar</label>
                 <select name="metode" id="metodeBayar" class="form-control" required>
@@ -55,16 +61,42 @@ include '../halamanweb/templates/header.php';
                 </select>
               </div>
 
+              <!-- Upload Bukti -->
               <div class="mb-3" id="buktiDiv" style="display: none;">
                 <label>Upload Bukti Pembayaran</label>
                 <input type="file" name="bukti" id="inputBukti" class="form-control" accept="image/*">
               </div>
 
+              <!-- Info Transfer -->
+              <div class="mb-3" id="transferInfo" style="display: none;">
+                <div class="card p-3 bg-light">
+                  <strong>Transfer ke Rekening:</strong>
+                  <p class="mb-0"><?= htmlspecialchars($transfer['nama_bank'] ?? '-') ?> - <?= htmlspecialchars($transfer['no_rekening'] ?? '-') ?></p>
+                  <p>a.n. <?= htmlspecialchars($transfer['atas_nama'] ?? '-') ?></p>
+                </div>
+              </div>
+
+              <!-- Info QRIS -->
+              <div class="mb-3" id="qrisInfo" style="display: none;">
+                <div class="card p-3 bg-light text-center">
+                  <strong>Scan QRIS</strong>
+                  <div class="mt-2">
+                    <?php if (!empty($qris['gambar_qris']) && file_exists('../../assets/img/pembayaran/' . $qris['gambar_qris'])): ?>
+                      <img src="<?= BASE_URL ?>assets/img/pembayaran/<?= $qris['gambar_qris'] ?>" width="200" alt="QRIS Daffa Cakes">
+                    <?php else: ?>
+                      <p class="text-danger">QRIS belum tersedia.</p>
+                    <?php endif; ?>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Alamat Pengiriman -->
               <div class="mb-3">
                 <label>Alamat Pengiriman</label>
                 <textarea name="alamat" class="form-control" required><?= htmlspecialchars($pelanggan['alamat'] ?? '') ?></textarea>
               </div>
 
+              <!-- Hidden -->
               <input type="hidden" name="keranjang" id="inputKeranjang">
               <input type="hidden" name="total_harga" id="inputTotal">
 
@@ -75,6 +107,7 @@ include '../halamanweb/templates/header.php';
             </form>
           </div>
         </div>
+
       </div>
     </div>
   </section>
@@ -185,12 +218,21 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('metodeBayar').addEventListener('change', function () {
-    const div = document.getElementById('buktiDiv');
-    const fileInput = document.getElementById('inputBukti');
-    const show = this.value === 'Transfer' || this.value === 'QRIS';
-    div.style.display = show ? 'block' : 'none';
-    if (!show) fileInput.value = '';
-  });
+  const div = document.getElementById('buktiDiv');
+  const fileInput = document.getElementById('inputBukti');
+  const metode = this.value;
+
+  const transferInfo = document.getElementById('transferInfo');
+  const qrisInfo = document.getElementById('qrisInfo');
+
+  const showBukti = metode === 'Transfer' || metode === 'QRIS';
+  div.style.display = showBukti ? 'block' : 'none';
+  if (!showBukti) fileInput.value = '';
+
+  transferInfo.style.display = metode === 'Transfer' ? 'block' : 'none';
+  qrisInfo.style.display = metode === 'QRIS' ? 'block' : 'none';
+});
+
 
   document.getElementById("formCheckout").addEventListener("submit", function (e) {
     e.preventDefault();
