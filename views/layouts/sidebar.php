@@ -121,6 +121,11 @@ $nama_toko = $data_toko['nama_toko'] ?? 'Toko Belum Diatur';
                 <i class="fas fa-box-open"></i><span>Produksi Kue</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/daffa_cakes/views/produksi/stok_produk.php">
+                <i class="fas fa-box-open"></i><span>Stok Produk</span>
+            </a>
+        </li>
     <?php endif; ?>
     <hr class="sidebar-divider d-none d-md-block">
     <li class="nav-item">
