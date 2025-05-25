@@ -33,8 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             case 'kasir':
                 header("Location: /daffa_cakes/views/dashboard/kasir/index.php");
                 break;
-            case 'chef':
-                header("Location: /daffa_cakes/views/dashboard/chef/index.php");
+            case 'karyawan':
+                header("Location: /daffa_cakes/views/dashboard/karyawan/index.php");
                 break;
             default:
                 $_SESSION['error'] = "Role tidak dikenali.";

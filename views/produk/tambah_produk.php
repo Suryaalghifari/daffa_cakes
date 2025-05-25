@@ -2,7 +2,7 @@
 session_start();
 require_once '../../config/koneksi.php';
 
-if (!isset($_SESSION['user']) || !in_array($_SESSION['user']['role'], ['admin', 'chef'])) {
+if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
     header("Location: /daffa_cakes/views/auth/login.php");
     exit;
 }

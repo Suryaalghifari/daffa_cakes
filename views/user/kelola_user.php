@@ -35,7 +35,7 @@ $query = mysqli_query($conn, "SELECT * FROM user ORDER BY user_id ASC");
                 <option value="owner">Owner</option>
                 <option value="admin">Admin</option>
                 <option value="kasir">Kasir</option>
-                <option value="chef">Chef</option>
+                <option value="karyawan">karyawan</option>
             </select>
         </div>
 

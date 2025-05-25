@@ -53,7 +53,7 @@ $nama_toko = $data_toko['nama_toko'] ?? 'Toko Belum Diatur';
                     <i class="fas fa-wrench"></i><span>Kelola Laporan</span>
                 </a>
             </li>
-<?php endif; ?>
+    <?php endif; ?>
 
 
     <?php elseif ($role === 'admin'): ?>
@@ -81,7 +81,12 @@ $nama_toko = $data_toko['nama_toko'] ?? 'Toko Belum Diatur';
                 <a class="nav-link" href="/daffa_cakes/views/laporan/kelola_laporan.php">
                     <i class="fas fa-wrench"></i><span>Kelola Laporan</span>
                 </a>
-            </li>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/daffa_cakes/views/produksi/laporan_produksi.php">
+                <i class="fas fa-box-open"></i><span>Laporan Produksi</span>
+            </a>
+        </li>
 
     <?php endif; ?>
     
@@ -105,15 +110,15 @@ $nama_toko = $data_toko['nama_toko'] ?? 'Toko Belum Diatur';
         </li>
     <?php endif; ?>
 
-    <?php if ($role === 'chef'): ?>
+    <?php if ($role === 'karyawan'): ?>
         <li class="nav-item">
-            <a class="nav-link" href="/daffa_cakes/views/dashboard/chef/index.php">
+            <a class="nav-link" href="/daffa_cakes/views/dashboard/karyawan/index.php">
                 <i class="fas fa-home"></i><span>Dashboard</span>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/daffa_cakes/views/produk/kelola_produk.php">
-                <i class="fas fa-box-open"></i><span>Kelola Produk</span>
+            <a class="nav-link" href="/daffa_cakes/views/produksi/produksi_karyawan.php">
+                <i class="fas fa-box-open"></i><span>Produksi Kue</span>
             </a>
         </li>
     <?php endif; ?>

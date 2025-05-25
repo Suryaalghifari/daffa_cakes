@@ -43,7 +43,7 @@ $isIndex = $currentPage === 'index.php';
       <ul class="d-flex align-items-center gap-3">
         <li><a href="<?= $isIndex ? '#hero' : BASE_URL . 'views/halamanweb/index.php#hero' ?>">Home</a></li>
         <li><a href="<?= $isIndex ? '#about' : BASE_URL . 'views/halamanweb/index.php#about' ?>">Tentang</a></li>
-        <li><a href="<?= $isIndex ? '#menu' : BASE_URL . 'views/halamanweb/index.php#menu' ?>">Menu</a></li>
+        <li><a href="<?= $isIndex ? '#menu' : BASE_URL . 'views/halamanweb/index.php#menu' ?>">Product</a></li>
         <li><a href="<?= $isIndex ? '#contact' : BASE_URL . 'views/halamanweb/index.php#contact' ?>">Kontak</a></li>
         <?php if ($pelanggan): ?>
           <li><a href="<?= BASE_URL ?>views/pelanggan/riwayat_pelanggan.php">Riwayat</a></li>
